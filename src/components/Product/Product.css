@@ -16,6 +16,11 @@
     height: 100px;
     margin-bottom: 15px;
 }
+.link{
+    text-decoration: none;
+    color:black;
+   
+};
 .roduct__title{
     -webkit-font-smoothing: antialiased;
 text-align: left;

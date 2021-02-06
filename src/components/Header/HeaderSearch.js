@@ -9,10 +9,10 @@ import { Clear, ExpandMore, Search } from "@material-ui/icons";
 import React, { Fragment, memo, useCallback, useState } from "react";
 
 import Megamenu from "./Megamenu";
-import Searchresults from "./SearchResult";
+import Searchresults from "./Searchresults";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { isTablet } from "react-device-detect";
-
+import megadata from './megamenudata'
 const HeaderSearch = () => {
   const classes = useStyles();
   const [showMegamenu, setShowMegamenu] = useState(false);
@@ -26,10 +26,11 @@ const HeaderSearch = () => {
   });
   const [ResultData, SetResultData] = useState([]);
   const [ShowResultSection, SetShowResultSection] = useState(false);
-  const { data } = []
-  const { data: Megamenudata } =[]
+  
 
-  const { MEGAMENU, MENUTYPE, placeholderImage } = data || {};
+  const  Megamenudata = megadata
+
+  const { MEGAMENU, MENUTYPE, placeholderImage } =  {MEGAMENU:{value:1}, MENUTYPE:"three",placeholderImage:""};
   const handleCloseMegaMenu = useCallback(() => {
     setShowMegamenu(false);
   }, []);
@@ -126,7 +127,6 @@ const HeaderSearch = () => {
           {MENUTYPE && showMegamenu && (
             <Megamenu
               handleCloseMegaMenu={handleCloseMegaMenu}
-              Megamenudata={Megamenudata}
               menuValue={MEGAMENU?.value}
               placeholderImage={placeholderImage}
             />

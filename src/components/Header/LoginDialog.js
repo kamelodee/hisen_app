@@ -12,10 +12,11 @@ import Close from "@material-ui/icons/Close";
 import React, { Fragment, useState, lazy, Suspense, memo } from "react";
 import { isMobile } from "react-device-detect";
 import { mutate } from "swr";
-
+import AxiosConfigure, { PrivateBaseUrl } from "../../Axios.configure";
+import LoginImage from "../Images/Login.image";
 import { Skeleton } from "@material-ui/lab";
 import axios from "axios";
-
+const MobileNumberInput = lazy(() => import("../MobileNumberInput"));
 const LoginDialog = ({ openDialog, setopenDialog }) => {
   const [mobileNumber, setmobileNumber] = useState();
   const [mobileOtp, setmobileOtp] = useState("");
@@ -23,14 +24,13 @@ const LoginDialog = ({ openDialog, setopenDialog }) => {
   const [loading, setloading] = useState(false);
   const [error, seterror] = useState("");
   const [otperror, setotperror] = useState("");
-
   const HandleMobileOtp = (ev) => {
     setmobileOtp(ev.target.value);
   };
-  const handleCloseDialog = (ev) => {
+  const handleCloseDialog = () => {
     setopenDialog(false);
     setShowMobileNumber(true);
-    setmobileNumber(ev.target.value);
+    setmobileNumber("");
     setmobileOtp("");
   };
 
@@ -45,17 +45,17 @@ const LoginDialog = ({ openDialog, setopenDialog }) => {
           seterror("");
         }
         const json = {
-          mobileNumber: mobileNumber,
-          countryCode: parseInt("1223"),
-          countryCodeIso:"23235",
+          mobileNumber: mobileNumber.nationalNumber,
+          countryCode: parseInt(mobileNumber.countryCallingCode),
+          countryCodeIso: mobileNumber.country,
         };
-        
+        console.log(PrivateBaseUrl);
         if (ShowMobileNumber) {
           let url;
           if (process.env.NODE_ENV === "development") {
-            url ="auth/login-with-otp";
+            url = PrivateBaseUrl + "auth/login-with-otp";
           } else {
-            url = "/auth/login-with-otp-Kaleyra";
+            url = PrivateBaseUrl + "/auth/login-with-otp-Kaleyra";
           }
           await axios({
             url,
@@ -75,7 +75,7 @@ const LoginDialog = ({ openDialog, setopenDialog }) => {
             if (mobileOtp.length > 4) {
               json.otp = mobileOtp;
               const res = await axios({
-                url:  "/auth/validate-otp-new",
+                url: PrivateBaseUrl + "/auth/validate-otp-new",
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -84,13 +84,14 @@ const LoginDialog = ({ openDialog, setopenDialog }) => {
               });
               const data = res.data;
               localStorage.setItem("access token", data.accessToken);
-             
-              if (1) {
-               
+              const cartdata = await AxiosConfigure.cartLocal();
+              if (cartdata.length) {
+                const axios = await AxiosConfigure.PrivateConfigiration();
+                const userdetails = AxiosConfigure.getDecodedAccessToken();
                 await axios({
-                  url: `carts/addMultipleProducts?userId`,
+                  url: `carts/addMultipleProducts?userId=${userdetails.sub}`,
                   method: "post",
-                  data: 1
+                  data: cartdata,
                 });
                 localStorage.setItem("cart_data", JSON.stringify([]));
               }
@@ -161,27 +162,27 @@ const LoginDialog = ({ openDialog, setopenDialog }) => {
 
               <Box flexGrow={1} />
               <Box>
-                {/* <LoginImage /> */}
+                <LoginImage />
               </Box>
             </Box>
             <Box width={!isMobile ? "55%" : "100%"} p="56px 35px 16px">
               <Box mb={4}>
                 <Suspense fallback={<Skeleton height="39px" />}>
-                  {/* <MobileNumberInput
+                  <MobileNumberInput
                     value={mobileNumber}
                     setShowMobileNumber={setShowMobileNumber}
                     setmobileOtp={setmobileOtp}
                     onChange={setmobileNumber}
                     error={error}
                     seterror={seterror}
-                  /> */}
+                  />
                 </Suspense>
 
                 {!ShowMobileNumber && (
                   <TextField
                     value={mobileOtp}
                     autoFocus
-                    
+                    error={otperror}
                     helperText={otperror}
                     onChange={HandleMobileOtp}
                     label="One time password"
@@ -236,4 +237,4 @@ const LoginDialog = ({ openDialog, setopenDialog }) => {
   );
 };
 
-export default LoginDialog;
+export default memo(LoginDialog);

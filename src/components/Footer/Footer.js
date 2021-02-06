@@ -6,7 +6,23 @@ import includes from "lodash/includes";
 import { Box, Grid, Typography, Fab } from "@material-ui/core";
 import KeyboardArrowUp from "@material-ui/icons/KeyboardArrowUp";
 const Footer = () => {
-  const { data } = [];
+  const { data } = {data:{
+    backToTop:200,
+    footerBgColor:"#fff",
+    showFooter:true,
+    showPages:true,
+    titleTextColor:"#fff",
+    copyRight:{
+      title:"2021",
+      CRbgColor:"#fff",
+      textColor:"#fff"
+    },
+    listOfItems:[
+      {footerBgColor:"#fff"}
+    ]
+  }
+  
+  };
   const classes = useStyles();
   const history = useHistory();
   const { pathname } = history.location;
@@ -55,57 +71,43 @@ const Footer = () => {
               justify="space-between"
               className={classes.footerColumns}
             >
-              {data.listOfItems.slice(0, 4).map((list, indexP) => (
+             
+
+
+
                 <Grid
-                  key={indexP}
+                  
                   item
                   container
                   direction="row"
                   xs={12}
                   className={classes.footerGrid}
-                  style={{
-                    backgroundColor:
-                      list && list.footerBgColor
-                        ? list.footerBgColor
-                        : "inherit",
-                    color:
-                      list && list.titleTextColor
-                        ? list.titleTextColor
-                        : "inherit",
-                    padding: "16px",
-                    borderBottom: `${list && list.borderWidth}px solid ${
-                      list && list.borderColor
-                    }`,
-                  }}
+                  
                 >
-                  {list.innerList.map((innerItem, indexC) => (
+                  
                     <Box
-                      key={indexC}
+                    
                       mb={2}
-                      width={
-                        innerItem.blockWidth
-                          ? innerItem.blockWidth + "%"
-                          : "25%"
-                      }
+                     
                       pr={2}
                     >
-                      {innerItem.title && (
+                      
                         <Typography
                           variant="h3"
                           className={classes.footerColTitle}
                         >
-                          {innerItem.title}
+                        About
                         </Typography>
-                      )}
+                    
                       <Box
                         dangerouslySetInnerHTML={{
-                          __html: innerItem.description,
+                          __html: "",
                         }}
                       ></Box>
                     </Box>
-                  ))}
+                  
                 </Grid>
-              ))}
+            
             </Grid>
           </Box>
           <Box

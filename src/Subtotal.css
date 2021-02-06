@@ -52,7 +52,7 @@ width: 100%;
 transition: .5s;
 }
 
-.product>button:hover{
+.subtotalbutton:hover{
     color: #000;
     
 }

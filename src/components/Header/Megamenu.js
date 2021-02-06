@@ -16,8 +16,10 @@ import groupBy from "lodash/groupBy";
 import find from "lodash/find";
 import isArray from "lodash/isArray";
 import { Link } from "react-router-dom";
+import megamenudata from "./megamenudata";
+const data = megamenudata
 const Megamenu = ({
-  Megamenudata: data,
+
   menuValue,
   handleCloseMegaMenu,
   placeholderImage,
@@ -37,9 +39,10 @@ const Megamenu = ({
   }
   useEffect(() => {
     if (data) {
+      console.log(data)
       if (threeMenu) {
         const datas = map(
-          groupBy(data.data.listSubCategory, "categoryId.majorCategoryId.name")
+          groupBy(data.listSubCategory, "categoryId.majorCategoryId.name")
         );
         setdetailData(groupBy(datas[0], "categoryId.name"));
       }
@@ -114,7 +117,7 @@ const Megamenu = ({
               ))}
             {data &&
               (threeMenu || twoMenu) &&
-              map(
+              map(  
                 groupBy(
                   data.data.listSubCategory,
                   threeMenu
@@ -131,7 +134,7 @@ const Megamenu = ({
                         ? Boolean(
                             find(
                               detailData,
-                              (o) => o[0].categoryId.majorCategoryId.name === i
+                              (o) => o.categoryId.majorCategoryId.name === i
                             )
                           )
                         : find(

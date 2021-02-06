@@ -6,11 +6,13 @@ import * as serviceWorker from './serviceWorker';
 import { StateProvider } from './StateProvider'
 import { initialState } from './Reducer'
 import reducer from './Reducer'
+import CheckConnection from "./CheckConnection";
 ReactDOM.render(
   <React.StrictMode>
     <StateProvider initialState={initialState} reducer={reducer}>
     <App />
     </StateProvider>
+    <CheckConnection/>
   </React.StrictMode>,
   document.getElementById('root')
 );
